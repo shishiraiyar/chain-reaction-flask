@@ -1,8 +1,13 @@
-from flask import Flask, render_template
-from json import load
+from flask import Flask, render_template, request
+from json import load, dump
+from time import sleep
 
 app = Flask(__name__)
 
+moveEnable = True
+numPlayers = 4
+currentPlayer = 1
+joinEnable = False
 
 
 @app.route("/")
@@ -16,11 +21,125 @@ def returnData(roomId):
         fileData = load(file)
     data = fileData.get(roomId, -1)
     if(data == -1):
-      return {"idk": "Room not found"}
+        return {"idk": "Room not found"}
     return data
     
+@app.route("/move/<roomId>", methods=["POST"])
+def move(roomId):
+    global moveEnable
+    global numPlayers
+    global currentPlayer
+    with open("board.json") as file:
+        fileData = load(file)
+    data = fileData.get(roomId, -1)
+    if(data == -1):
+        return {"idk": "Room not found"}
+    #get global stuff from data here
+    playerId = int(request.json["playerId"])
+    square = int(request.json["square"])
+    if (not moveEnable):
+        return -1                        #maybe custom errors
+    if (playerId != currentPlayer):
+        return -1
+    
+    grid = data["grid"]
+    if (grid[square]["value"]!= 0  and grid[square]["colour"] != currentPlayer):
+        print(grid[square]["colour"], currentPlayer)
+        return -1
+    
+
+    grid[square]["colour"] = currentPlayer
 
 
+    moveEnable = False
+    grid[square]["value"] += 1
+    #push to stack 
+    stack = []
+    stack.append(square)
+
+    while(len(stack)>0): #while stack not empty
+        #write to file here
+        data["grid"] = grid
+        fileData[roomId] = data
+        with open("board.json", "w") as file:
+            dump(fileData, file, indent = 4)
+        
+        i = stack[-1]  
+        print(i)             
+        if (grid[i]["value"] == grid[i]["maxValue"]):
+            #set its value to 0
+            grid[i]["value"] = 0
+
+            #set neighbours colours to this
+            #increase neighbours value
+            if (i//6 !=0):
+                grid[i-6]["colour"] = grid[i]["colour"]
+                grid[i-6]["value"]+=1
+                stack.append(i-6)
+                continue
+
+
+            if(i%6!=0):
+                grid[i-1]["colour"] = grid[i]["colour"]
+                grid[i-1]["value"]+=1
+                stack.append(i-1)
+                continue
+
+            if(i%6!=5):
+                grid[i+1]["colour"] = grid[i]["colour"]
+                grid[i+1]["value"]+=1
+                stack.append(i+1)
+                continue
+
+            if (i//6 != 5):
+                grid[i+6]["colour"] = grid[i]["colour"]
+                grid[i+6]["value"] += 1
+                stack.append(i+6)
+                continue
+
+        else:
+            stack.pop()
+
+    #move done
+    data["grid"] = grid
+    fileData[roomId] = data
+    with open("board.json", "w") as file:
+        dump(fileData, file, indent = 4)
+
+
+
+                    
+### IT HAS TO BE RECURSIVE. OR it has to have stack. 
+### Or else you can have neighbouring fours
+            
+# Top left right down
+
+
+    #currentPlayer = (currentPlayer+1)%numPlayers
+    moveEnable = True
+    return {"aa":1}
+	
+   
+
+"""
+while(flag): #while stack not empty
+        flag = False
+        for i in range(36): #remove for
+            if (grid[i]["value"] == grid[square]["maxValue"]):
+                flag = True
+                #set its value to 0
+                grid[i]["value"] = 0
+                #set neighbours colours to this
+                #increase neighbours value
+                if (i//6 !=0):
+                    grid[i-6]["colour"] = grid[i]["colour"]
+                    grid[i-6]["value"]+=1
+
+                if (i//6 != 5):
+                    grid[i+6]["colour"] = grid[i]["colour"]
+                    grid[i+6]["value"] += 1
+                    
+"""
 
 
 """

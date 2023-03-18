@@ -1,25 +1,68 @@
 roomId = 12
+playerId = 1
 
 async function displayGrid(){
     let data = await getData()
     let grid = data["grid"]
-    //console.log(grid)
     let htmlString = ""
     for (let i=0; i<grid.length; i++){
         if (grid[i]["value"] == 0)
-            htmlString += '<div class="square fullImg" id="'+ i +'"><img "/></div>'
+            htmlString += '<div name="square" class="square fullImg" id="'+ i +'"><img "/></div>'
         else{
             console.log(grid[i]["value"], grid[i]["colour"])
             let imgFile = getImageFile(grid[i]["value"], grid[i]["colour"]) 
             console.log(imgFile)
-            htmlString += '<div class="square fullImg" id="' + i + '"><img src="' + imgFile + '"/></div>'
+            htmlString += '<div name="square" class="square fullImg" id="' + i + '"><img src="' + imgFile + '"/></div>'
         }
     }
     document.getElementsByClassName("grid")[0].innerHTML = htmlString;
 
+    for (let i=0; i<grid.length; i++){
+        let squareElement = document.getElementsByName("square")[i]
+        squareElement.addEventListener("click", function(){
+            onClick(squareElement.id)
+        })
+    } 
+}
+
+async function onClick(squareNumber){
+    let data = {"playerId": playerId, "square": squareNumber}
+    await fetch("/move/" + roomId, {
+        method:"POST",
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+
 }
 
 displayGrid()
+
+// async function post(data){//sends stuff to server. write one more func that gets data and calls this
+//     let response = await fetch("/api", {
+//         method:"POST",
+//         headers: {
+//             'Accept': 'application/json',
+//             'Content-Type': 'application/json'
+//         },
+//         body: JSON.stringify(data)
+//     }).then(response =>response.json())
+//     console.log(response)
+
+// }
+
+
+
+
+
+
+
+
+
+
+
 
 
 async function getData(){
@@ -42,6 +85,7 @@ function getImageFile(value, colour){
     }
     return imgFile
 }
+
 
 
 /*
