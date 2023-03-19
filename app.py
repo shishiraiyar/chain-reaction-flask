@@ -5,8 +5,8 @@ from time import sleep
 app = Flask(__name__)
 
 moveEnable = True
-numPlayers = 4
-currentPlayer = 1
+numPlayers = 3
+currentPlayer = 0
 joinEnable = False
 
 
@@ -38,13 +38,16 @@ def move(roomId):
     playerId = int(request.json["playerId"])
     square = int(request.json["square"])
     if (not moveEnable):
+        print("Moveenable")
         return -1                        #maybe custom errors
     if (playerId != currentPlayer):
+        print("wrong player")
         return -1
     
     grid = data["grid"]
     if (grid[square]["value"]!= 0  and grid[square]["colour"] != currentPlayer):
-        print(grid[square]["colour"], currentPlayer)
+        print("Wrong move")
+        # print(grid[square]["colour"], currentPlayer)
         return -1
     
 
@@ -52,20 +55,25 @@ def move(roomId):
 
 
     moveEnable = False
-    grid[square]["value"] += 1
+    # grid[square]["value"] += 1
     #push to stack 
     stack = []
     stack.append(square)
 
     while(len(stack)>0): #while stack not empty
+        sleep(0.5)
         #write to file here
         data["grid"] = grid
         fileData[roomId] = data
         with open("board.json", "w") as file:
             dump(fileData, file, indent = 4)
         
-        i = stack[-1]  
-        print(i)             
+        i = stack.pop()
+        #increase value here
+        grid[i]["value"]+=1
+        
+
+        print("i:", i)             
         if (grid[i]["value"] == grid[i]["maxValue"]):
             #set its value to 0
             grid[i]["value"] = 0
@@ -74,31 +82,32 @@ def move(roomId):
             #increase neighbours value
             if (i//6 !=0):
                 grid[i-6]["colour"] = grid[i]["colour"]
-                grid[i-6]["value"]+=1
+                # grid[i-6]["value"]+=1
                 stack.append(i-6)
-                continue
+                
 
 
             if(i%6!=0):
                 grid[i-1]["colour"] = grid[i]["colour"]
-                grid[i-1]["value"]+=1
+                # grid[i-1]["value"]+=1
                 stack.append(i-1)
-                continue
+                
 
             if(i%6!=5):
                 grid[i+1]["colour"] = grid[i]["colour"]
-                grid[i+1]["value"]+=1
+                # grid[i+1]["value"]+=1
                 stack.append(i+1)
-                continue
+                
 
             if (i//6 != 5):
                 grid[i+6]["colour"] = grid[i]["colour"]
-                grid[i+6]["value"] += 1
+                # grid[i+6]["value"] += 1
                 stack.append(i+6)
-                continue
+                
 
         else:
-            stack.pop()
+            # stack.pop()
+            pass
 
     #move done
     data["grid"] = grid
@@ -115,7 +124,7 @@ def move(roomId):
 # Top left right down
 
 
-    #currentPlayer = (currentPlayer+1)%numPlayers
+    currentPlayer = (currentPlayer+1)%numPlayers
     moveEnable = True
     return {"aa":1}
 	
@@ -168,7 +177,6 @@ def clearDb():
 
       if(i%6==0 or i%6==5):
         instability+=1
-      print(i/6)
       temp.append({
         "colour":0, "value":0, "maxValue" : 4 - instability
     })
@@ -176,6 +184,6 @@ def clearDb():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, host="0.0.0.0", port=5000)
 
 

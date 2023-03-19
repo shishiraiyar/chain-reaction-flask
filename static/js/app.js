@@ -1,5 +1,6 @@
 roomId = 12
-playerId = 1
+playerId = 1;
+
 
 async function displayGrid(){
     let data = await getData()
@@ -7,11 +8,11 @@ async function displayGrid(){
     let htmlString = ""
     for (let i=0; i<grid.length; i++){
         if (grid[i]["value"] == 0)
-            htmlString += '<div name="square" class="square fullImg" id="'+ i +'"><img "/></div>'
+            htmlString += '<div name="square" class="square fullImg" id="'+ i +'"><img /></div>'
         else{
-            console.log(grid[i]["value"], grid[i]["colour"])
+            // console.log(grid[i]["value"], grid[i]["colour"])
             let imgFile = getImageFile(grid[i]["value"], grid[i]["colour"]) 
-            console.log(imgFile)
+            // console.log(imgFile)
             htmlString += '<div name="square" class="square fullImg" id="' + i + '"><img src="' + imgFile + '"/></div>'
         }
     }
@@ -26,6 +27,10 @@ async function displayGrid(){
 }
 
 async function onClick(squareNumber){
+    playerId = document.getElementById("player").value
+
+    console.log(playerId)
+    console.log("CLOCKCKC")
     let data = {"playerId": playerId, "square": squareNumber}
     await fetch("/move/" + roomId, {
         method:"POST",
@@ -35,10 +40,28 @@ async function onClick(squareNumber){
         },
         body: JSON.stringify(data)
     })
-
 }
+window.onload = async (event) => {
+    await displayGrid()
+    setInterval(updateGrid, 500)
+  };
 
-displayGrid()
+
+async function updateGrid(){
+    console.log("A")
+    let data = await getData()
+    let grid = data["grid"]
+
+    for (let i=0; i<grid.length; i++){
+        let squareElement = document.getElementsByName("square")[i]
+        if (grid[i]["value"] != 0){
+            let imgFile = getImageFile(grid[i]["value"], grid[i]["colour"]) 
+            squareElement.childNodes[0].src = imgFile
+        }
+        else 
+            squareElement.childNodes[0].src = "../static/images/blank.png"
+    }
+}
 
 // async function post(data){//sends stuff to server. write one more func that gets data and calls this
 //     let response = await fetch("/api", {
