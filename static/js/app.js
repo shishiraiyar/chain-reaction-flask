@@ -1,6 +1,6 @@
-roomId = 12
-playerId = 1;
-
+roomId = roomId;
+playerId = playerId;
+//get room id and player id from server when getting redirected
 
 async function displayGrid(){
     let data = await getData()
@@ -27,8 +27,7 @@ async function displayGrid(){
 }
 
 async function onClick(squareNumber){
-    playerId = document.getElementById("player").value
-
+    // playerId = document.getElementById("player").value
     console.log(playerId)
     console.log("CLOCKCKC")
     let data = {"playerId": playerId, "square": squareNumber}
@@ -78,7 +77,17 @@ async function updateGrid(){
 
 
 
-
+document.getElementById("start").addEventListener("click", async()=>{
+    await fetch("/start/" + roomId, {
+        method:"POST",
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({"id": playerId})
+    })
+    //delets the button here
+})
 
 
 
@@ -111,31 +120,3 @@ function getImageFile(value, colour){
 
 
 
-/*
-var htmlString = ""
-    for(let i=0; i<grid.length; i++){
-      var imgFile = ""
-      if (grid[i]["value"] != 0) {
-        imgFile += 'images/' + grid[i]["colour"] + grid[i]["value"] + '.png';
-        htmlString += '<div class="square fullImg" id="' + i + '"><img src="' + imgFile + '"/></div>'
-      }
-      
-    }
-    document.getElementsByClassName("grid")[0].innerHTML = htmlString;
-
-
-    var gridElements = document.getElementsByClassName("square");
-
-    for (let i=0; i< gridElements.length; i++){
-      gridElements[i].addEventListener("click", function(){
-
-        isClicked(i)
-        // currentPlayer = (currentPlayer+1)%3
-        // console.log("p",currentPlayer)
-
-    }
-    )
-  }
-  sleep(500)
-  }
-*/
