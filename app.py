@@ -5,11 +5,16 @@ from random import randrange
 
 app = Flask(__name__)
 
-# moveEnable = True
-# numPlayers = 3
-# currentPlayer = 0
+
 joinEnable = False
 #when u click start set cur player to players[0]
+
+## ADD GAME OVER##
+##Better error messages##
+##Front end for errors##
+##Test join after game start##
+##Dont give full data. Give only some data##
+##Fix Moveenable## DONE
 
 @app.route("/")
 def home():
@@ -73,6 +78,10 @@ def move(roomId):
     data = getData(roomId)
     if(data == -1):
         return {"idk": "Room not found"}
+    
+    if (not data["isStarted"]):
+        print("NOT START")
+        return -1
 
     currentPlayerIndex = data["currentPlayerIndex"]
     currentPlayerId = data["players"][currentPlayerIndex]
@@ -81,6 +90,12 @@ def move(roomId):
 
     playerId = int(request.json["playerId"])
     square = int(request.json["square"])
+
+    if (data["isGameOver"]):
+        print("GAMOVAAAAAAAAAAAAAAAA")
+        return -1
+    
+
 
     if (not moveEnable):
         print("Moveenable")
@@ -95,11 +110,9 @@ def move(roomId):
         # print(grid[square]["colour"], currentPlayer)
         return -1
     
-
+    data["moveEnable"] = False
     grid[square]["colour"] = currentPlayerIndex
 
-
-    moveEnable = False
     # grid[square]["value"] += 1
     #push to stack 
     stack = []
@@ -111,6 +124,10 @@ def move(roomId):
         data["grid"] = grid
         putData(roomId, data)
         
+        if (isGameOver(grid)):
+            data["isGameOver"] = True
+            break
+
         i = stack.pop()
         #increase value here
         grid[i]["value"]+=1
@@ -149,14 +166,16 @@ def move(roomId):
                 
 
         else:
-            # stack.pop()
             pass
 
     #move done
     data["grid"] = grid
     data["currentPlayerIndex"] = (currentPlayerIndex+1)%numPlayers
+    data["moveEnable"] = True
     putData(roomId, data)
+    
 
+    return {"aa":1}
 
 
                     
@@ -165,10 +184,6 @@ def move(roomId):
             
 # Top left right down
 
-
- 
-    moveEnable = True
-    return {"aa":1}
 	
 
     
@@ -210,7 +225,8 @@ Flask is multithreaded so peace. Clients keep requesting for the board(maybe at 
 
 def emptyData():
     temp = {}
-    temp["isStarted"] = True #same as join enable #CHANGE LATER
+    temp["isStarted"] = False #same as join enable #CHANGE LATER
+    temp["isGameOver"] = False
     temp["moveEnable"] = True
     temp["numPlayers"]=0
     temp["currentPlayerIndex"] = None
@@ -234,6 +250,19 @@ def emptyGrid():
         "colour":0, "value":0, "maxValue" : 4 - instability
     })
     return temp
+
+def isGameOver(grid):
+    alivePlayers = set()
+    sqrCount =0         #ensures there are atleast two squares with value>1. or else gameover triggers when first player moves
+    for i in range(36):
+        if (grid[i]["value"] > 0):
+            alivePlayers.add(grid[i]["colour"])
+            sqrCount+=1
+
+    if (len(alivePlayers)<2 and sqrCount>1):
+        return True
+    else:
+        return False
 
 
 if __name__ == "__main__":
