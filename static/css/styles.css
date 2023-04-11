@@ -1,11 +1,11 @@
-.grid {
+/* .grid {
     display: grid;
     grid-template-columns: repeat(6, 1fr);
     gap: 10%;
     max-width: 700px;
-  }
+  } */
   
-.square {
+/* .square {
   aspect-ratio: 1/1;
   display: flex;
   align-items: center;
@@ -24,15 +24,24 @@
   height: 100%;
   object-fit: contain;
   object-position: center;
-}
+} */
 
 /* .square.fullImg {
   padding: 0;
 } */
-
+/* 
 .square.fullImg img {
   object-fit: cover;
+} */
+
+.svgImg{
+  background-color:rgb(226, 226, 226);
+  width:50px;
+  margin-right: 5px;
+  border-color: black;
+  border-radius: 5px;
 }
+
 
 /* table, td, th {  
   border: 1px solid black;
