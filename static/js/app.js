@@ -55,28 +55,12 @@ async function updateGrid(){
 
 
 
-
-
 async function getData(){
     let response = await fetch("/getData/" + roomId).then(response => response.json())
     return response
 }
 
-function getImageFile(value, colour){
-    let imgFile = "../static/images/"
-    switch(value){
-        case 1:imgFile += "single"; break;
-        case 2:imgFile += "double"; break;
-        case 3:imgFile += "triple"; break;
-        case 4:imgFile += "quadraple"; break;
-    }
-    switch(colour){
-        case 0:imgFile += "Red.png"; break;
-        case 1:imgFile += "Green.png"; break;
-        case 2:imgFile += "Blue.png"; break;
-    }
-    return imgFile
-}
+
 
 function getSvgImg(value, colour){ 
     
@@ -124,8 +108,7 @@ function enableStartButton(){
             body: JSON.stringify({"id": playerId})
         })
         startButton.remove()
-    })
-    
+    })   
 }
 
 
@@ -135,3 +118,19 @@ function enableStartButton(){
         //     let imgFile = getImageFile(grid[i]["value"], grid[i]["colour"]) 
         //     htmlString += '<div name="square" class="square fullImg" id="' + i + '"><img src="' + imgFile + '"/></div>'
         // }
+
+// function getImageFile(value, colour){
+//     let imgFile = "../static/images/"
+//     switch(value){
+//         case 1:imgFile += "single"; break;
+//         case 2:imgFile += "double"; break;
+//         case 3:imgFile += "triple"; break;
+//         case 4:imgFile += "quadraple"; break;
+//     }
+//     switch(colour){
+//         case 0:imgFile += "Red.png"; break;
+//         case 1:imgFile += "Green.png"; break;
+//         case 2:imgFile += "Blue.png"; break;
+//     }
+//     return imgFile
+// }

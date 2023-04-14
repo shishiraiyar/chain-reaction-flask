@@ -7,14 +7,16 @@ app = Flask(__name__)
 
 
 joinEnable = False
-#when u click start set cur player to players[0]
 
-## ADD GAME OVER##
+## ADD GAME OVER## DONE
 ##Better error messages##
 ##Front end for errors##
 ##Test join after game start##
+
 ##Dont give full data. Give only some data##
 ##Fix Moveenable## DONE
+## SHOW GAME ROOM##       Done
+##DONT LET SOLO PLAY##    
 
 @app.route("/")
 def home():
