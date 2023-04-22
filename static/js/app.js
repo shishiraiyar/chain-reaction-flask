@@ -23,15 +23,18 @@ async function displayGrid(){
 }
 
 async function onClick(squareNumber){
+    throwError("Not your turn");
+
     let data = {"playerId": playerId, "square": squareNumber}
-    await fetch("/move/" + roomId, {
+    let response = await fetch("/move/" + roomId, {
         method:"POST",
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
         },
         body: JSON.stringify(data)
-    })
+    }).then((response)=>response.json())
+    console.log(response)
 }
 
 window.onload = async (event) => {
@@ -109,6 +112,20 @@ function enableStartButton(){
         })
         startButton.remove()
     })   
+}
+
+
+function throwError(message, colour="#ff0000"){
+    const errorBox = document.createElement("div")
+    errorBox.className = "errorBox"
+    errorBox.innerHTML = `<h3 class="errorMsg">${message}</h3>`
+    document.body.appendChild(errorBox)
+    
+    setTimeout(() => {
+        // errorBox.remove();
+        errorBox.style.opacity = '0';
+    }, 1500);
+    errorBox.addEventListener('transitionend', () => errorBox.remove());
 }
 
 

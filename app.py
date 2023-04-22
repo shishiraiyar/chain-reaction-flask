@@ -14,9 +14,10 @@ joinEnable = False
 ##Test join after game start##
 
 ##Dont give full data. Give only some data##
-##Fix Moveenable## DONE
+##Fix Moveenable##        DONE
 ## SHOW GAME ROOM##       Done
 ##DONT LET SOLO PLAY##    
+## FONT ##
 
 @app.route("/")
 def home():
