@@ -6,11 +6,9 @@ from random import randrange
 app = Flask(__name__)
 
 
-joinEnable = False
-
 ## ADD GAME OVER## DONE
 ##Better error messages##
-##Front end for errors##
+##Front end for errors##        DONE
 ##Test join after game start##
 
 ##Dont give full data. Give only some data##
@@ -18,6 +16,16 @@ joinEnable = False
 ## SHOW GAME ROOM##       Done
 ##DONT LET SOLO PLAY##    
 ## FONT ##
+
+## Change to iterative ##
+
+## Start button shows on reload even after game started##
+
+## Time limit for moving ##
+## Lag issues##
+
+## Show player colour##
+## Maybe even take player name when joining and show all player colours##
 
 @app.route("/")
 def home():
@@ -80,11 +88,11 @@ def move(roomId):
 
     data = getData(roomId)
     if(data == -1):
-        return {"idk": "Room not found"}
+        return {"status": 1, "message": "Room not found"}
     
     if (not data["isStarted"]):
         print("NOT START")
-        return -1
+        return {"status": 1, "message": "Game not started"}
 
     currentPlayerIndex = data["currentPlayerIndex"]
     currentPlayerId = data["players"][currentPlayerIndex]
@@ -96,7 +104,7 @@ def move(roomId):
 
     if (data["isGameOver"]):
         print("GAMOVAAAAAAAAAAAAAAAA")
-        return -1
+        return {"status": 1, "message": "GAME OVER"}
     
 
 
@@ -105,13 +113,12 @@ def move(roomId):
         return -1                        #maybe custom errors
     if (playerId != currentPlayerId):
         print("wrong player")
-        return -1
+        return {"status": 1, "message": "Not your turn"}
     
     grid = data["grid"]
     if (grid[square]["value"]!= 0  and grid[square]["colour"] != currentPlayerIndex):
         print("Wrong move")
-        # print(grid[square]["colour"], currentPlayer)
-        return -1
+        return {"status": 1, "message": "Invalid Move"}
     
     data["moveEnable"] = False
     grid[square]["colour"] = currentPlayerIndex
@@ -178,7 +185,7 @@ def move(roomId):
     putData(roomId, data)
     
 
-    return {"aa":1}
+    return {"status":0}
 
 
                     

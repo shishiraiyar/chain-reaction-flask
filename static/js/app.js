@@ -23,7 +23,6 @@ async function displayGrid(){
 }
 
 async function onClick(squareNumber){
-    throwError("Not your turn");
 
     let data = {"playerId": playerId, "square": squareNumber}
     let response = await fetch("/move/" + roomId, {
@@ -35,6 +34,10 @@ async function onClick(squareNumber){
         body: JSON.stringify(data)
     }).then((response)=>response.json())
     console.log(response)
+    if (response["status"]){
+        throwError(response["message"]);
+
+    }
 }
 
 window.onload = async (event) => {
