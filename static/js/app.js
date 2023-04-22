@@ -105,15 +105,21 @@ function enableStartButton(){
     if (!startButton)
         return
     startButton.addEventListener("click", async()=>{
-        await fetch("/start/" + roomId, {
+        let response = await fetch("/start/" + roomId, {
             method:"POST",
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({"id": playerId})
-        })
-        startButton.remove()
+        }).then((response)=>response.json())
+        console.log(response)
+        if (response["status"]){
+            throwError(response["message"]);
+        }
+        if (!response["status"]){
+            startButton.remove()
+        }
     })   
 }
 

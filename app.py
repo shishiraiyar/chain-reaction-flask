@@ -6,20 +6,21 @@ from random import randrange
 app = Flask(__name__)
 
 
-## ADD GAME OVER## DONE
-##Better error messages##
+## ADD GAME OVER##              DONE
+##Better error messages##       DONE
 ##Front end for errors##        DONE
 ##Test join after game start##
 
 ##Dont give full data. Give only some data##
 ##Fix Moveenable##        DONE
 ## SHOW GAME ROOM##       Done
-##DONT LET SOLO PLAY##    
+##DONT LET SOLO PLAY##    Done
 ## FONT ##
 
 ## Change to iterative ##
 
-## Start button shows on reload even after game started##
+## Start button shows on reload even after game started##       DONE
+## Host can restart and play again. Make backend check for started at the top of start function ##
 
 ## Time limit for moving ##
 ## Lag issues##
@@ -55,8 +56,8 @@ def joinRoom(roomId):
 def gamePage(roomId):
     playerId = request.args.get("id", default=1, type=int)
     data = getData(roomId)
-    isHost = playerId == data["host"]
-    return render_template("game.html", roomId=roomId, playerId=playerId, isHost=isHost)
+    isHost = (playerId == data["host"])
+    return render_template("game.html", roomId=roomId, playerId=playerId, displayStartButton=(isHost and not data["isStarted"]))
 
 @app.route("/getData/<roomId>")
 def returnData(roomId):
@@ -73,7 +74,11 @@ def start(roomId):
     id = request.json["id"]
     if (data["host"] != id):
         print("NOT HOST")
-        return -1
+        return {"status": 1, "message": "You not host"}
+    
+    if (data["numPlayers"] < 2):
+        return {"status": 1, "message": "You can't play alone"}
+
     data["isStarted"] = True
     data["currentPlayerIndex"] = 0
     putData(roomId, data)
@@ -110,7 +115,7 @@ def move(roomId):
 
     if (not moveEnable):
         print("Moveenable")
-        return -1                        #maybe custom errors
+        return {"status": 1, "message": "Wait for your turn"}                  #maybe custom errors
     if (playerId != currentPlayerId):
         print("wrong player")
         return {"status": 1, "message": "Not your turn"}
