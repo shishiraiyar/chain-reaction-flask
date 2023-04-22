@@ -1,0 +1,386 @@
+{
+    "5918": {
+        "isStarted": false,
+        "isGameOver": false,
+        "moveEnable": true,
+        "numPlayers": 0,
+        "currentPlayerIndex": null,
+        "players": [],
+        "host": null,
+        "grid": [
+            {
+                "colour": 0,
+                "value": 0,
+                "maxValue": 2
+            },
+            {
+                "colour": 0,
+                "value": 0,
+                "maxValue": 3
+            },
+            {
+                "colour": 0,
+                "value": 0,
+                "maxValue": 3
+            },
+            {
+                "colour": 0,
+                "value": 0,
+                "maxValue": 3
+            },
+            {
+                "colour": 0,
+                "value": 0,
+                "maxValue": 3
+            },
+            {
+                "colour": 0,
+                "value": 0,
+                "maxValue": 2
+            },
+            {
+                "colour": 0,
+                "value": 0,
+                "maxValue": 3
+            },
+            {
+                "colour": 0,
+                "value": 0,
+                "maxValue": 4
+            },
+            {
+                "colour": 0,
+                "value": 0,
+                "maxValue": 4
+            },
+            {
+                "colour": 0,
+                "value": 0,
+                "maxValue": 4
+            },
+            {
+                "colour": 0,
+                "value": 0,
+                "maxValue": 4
+            },
+            {
+                "colour": 0,
+                "value": 0,
+                "maxValue": 3
+            },
+            {
+                "colour": 0,
+                "value": 0,
+                "maxValue": 3
+            },
+            {
+                "colour": 0,
+                "value": 0,
+                "maxValue": 4
+            },
+            {
+                "colour": 0,
+                "value": 0,
+                "maxValue": 4
+            },
+            {
+                "colour": 0,
+                "value": 0,
+                "maxValue": 4
+            },
+            {
+                "colour": 0,
+                "value": 0,
+                "maxValue": 4
+            },
+            {
+                "colour": 0,
+                "value": 0,
+                "maxValue": 3
+            },
+            {
+                "colour": 0,
+                "value": 0,
+                "maxValue": 3
+            },
+            {
+                "colour": 0,
+                "value": 0,
+                "maxValue": 4
+            },
+            {
+                "colour": 0,
+                "value": 0,
+                "maxValue": 4
+            },
+            {
+                "colour": 0,
+                "value": 0,
+                "maxValue": 4
+            },
+            {
+                "colour": 0,
+                "value": 0,
+                "maxValue": 4
+            },
+            {
+                "colour": 0,
+                "value": 0,
+                "maxValue": 3
+            },
+            {
+                "colour": 0,
+                "value": 0,
+                "maxValue": 3
+            },
+            {
+                "colour": 0,
+                "value": 0,
+                "maxValue": 4
+            },
+            {
+                "colour": 0,
+                "value": 0,
+                "maxValue": 4
+            },
+            {
+                "colour": 0,
+                "value": 0,
+                "maxValue": 4
+            },
+            {
+                "colour": 0,
+                "value": 0,
+                "maxValue": 4
+            },
+            {
+                "colour": 0,
+                "value": 0,
+                "maxValue": 3
+            },
+            {
+                "colour": 0,
+                "value": 0,
+                "maxValue": 2
+            },
+            {
+                "colour": 0,
+                "value": 0,
+                "maxValue": 3
+            },
+            {
+                "colour": 0,
+                "value": 0,
+                "maxValue": 3
+            },
+            {
+                "colour": 0,
+                "value": 0,
+                "maxValue": 3
+            },
+            {
+                "colour": 0,
+                "value": 0,
+                "maxValue": 3
+            },
+            {
+                "colour": 0,
+                "value": 0,
+                "maxValue": 2
+            }
+        ]
+    },
+    "1752": {
+        "isStarted": false,
+        "isGameOver": false,
+        "moveEnable": true,
+        "numPlayers": 1,
+        "currentPlayerIndex": null,
+        "players": [
+            6981
+        ],
+        "host": 6981,
+        "grid": [
+            {
+                "colour": 0,
+                "value": 0,
+                "maxValue": 2
+            },
+            {
+                "colour": 0,
+                "value": 0,
+                "maxValue": 3
+            },
+            {
+                "colour": 0,
+                "value": 0,
+                "maxValue": 3
+            },
+            {
+                "colour": 0,
+                "value": 0,
+                "maxValue": 3
+            },
+            {
+                "colour": 0,
+                "value": 0,
+                "maxValue": 3
+            },
+            {
+                "colour": 0,
+                "value": 0,
+                "maxValue": 2
+            },
+            {
+                "colour": 0,
+                "value": 0,
+                "maxValue": 3
+            },
+            {
+                "colour": 0,
+                "value": 0,
+                "maxValue": 4
+            },
+            {
+                "colour": 0,
+                "value": 0,
+                "maxValue": 4
+            },
+            {
+                "colour": 0,
+                "value": 0,
+                "maxValue": 4
+            },
+            {
+                "colour": 0,
+                "value": 0,
+                "maxValue": 4
+            },
+            {
+                "colour": 0,
+                "value": 0,
+                "maxValue": 3
+            },
+            {
+                "colour": 0,
+                "value": 0,
+                "maxValue": 3
+            },
+            {
+                "colour": 0,
+                "value": 0,
+                "maxValue": 4
+            },
+            {
+                "colour": 0,
+                "value": 0,
+                "maxValue": 4
+            },
+            {
+                "colour": 0,
+                "value": 0,
+                "maxValue": 4
+            },
+            {
+                "colour": 0,
+                "value": 0,
+                "maxValue": 4
+            },
+            {
+                "colour": 0,
+                "value": 0,
+                "maxValue": 3
+            },
+            {
+                "colour": 0,
+                "value": 0,
+                "maxValue": 3
+            },
+            {
+                "colour": 0,
+                "value": 0,
+                "maxValue": 4
+            },
+            {
+                "colour": 0,
+                "value": 0,
+                "maxValue": 4
+            },
+            {
+                "colour": 0,
+                "value": 0,
+                "maxValue": 4
+            },
+            {
+                "colour": 0,
+                "value": 0,
+                "maxValue": 4
+            },
+            {
+                "colour": 0,
+                "value": 0,
+                "maxValue": 3
+            },
+            {
+                "colour": 0,
+                "value": 0,
+                "maxValue": 3
+            },
+            {
+                "colour": 0,
+                "value": 0,
+                "maxValue": 4
+            },
+            {
+                "colour": 0,
+                "value": 0,
+                "maxValue": 4
+            },
+            {
+                "colour": 0,
+                "value": 0,
+                "maxValue": 4
+            },
+            {
+                "colour": 0,
+                "value": 0,
+                "maxValue": 4
+            },
+            {
+                "colour": 0,
+                "value": 0,
+                "maxValue": 3
+            },
+            {
+                "colour": 0,
+                "value": 0,
+                "maxValue": 2
+            },
+            {
+                "colour": 0,
+                "value": 0,
+                "maxValue": 3
+            },
+            {
+                "colour": 0,
+                "value": 0,
+                "maxValue": 3
+            },
+            {
+                "colour": 0,
+                "value": 0,
+                "maxValue": 3
+            },
+            {
+                "colour": 0,
+                "value": 0,
+                "maxValue": 3
+            },
+            {
+                "colour": 0,
+                "value": 0,
+                "maxValue": 2
+            }
+        ]
+    }
+}
