@@ -34,6 +34,7 @@
 
 body{
   background-color: #159895;
+  text-align: center;
 }
 
 
@@ -71,4 +72,24 @@ h2{
 .errorMsg{
   margin-top: 0;
   margin-bottom: 0;
+}
+
+h1{
+  font-family: 'Bruno Ace SC', cursive;
+  font-size:xx-large;
+  /* font-weight: bolder; */
+  letter-spacing: 0.4vmin;
+}
+
+button{
+  /* background-color: chocolate; */
+  background-color: indianred;
+  border-radius: 5px;
+  margin-bottom: 8px;
+  font-family: 'Bruno Ace SC';
+}
+
+#roomNo{
+  max-width: 40px;
+  border-radius: 5px;
 }

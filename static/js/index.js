@@ -25,9 +25,16 @@ async function joinRoom(roomId){
     let response = await fetch("/joinRoom/" + roomId, {//perfectly valid apparently
         method:"POST"
     }).then((response)=>response.json())
-    console.log(roomId,response["playerId"])
-    let playerId = response["playerId"]
-    window.location.replace("/game/" + roomId + "?id="+ playerId)
+
+    if (response["status"]){
+        console.log("ERER")
+        throwError(response["message"])
+    }
+    else{
+        let playerId = response["playerId"]
+        window.location.replace("/game/" + roomId + "?id="+ playerId)
+    }
+
 
 }
 
@@ -43,6 +50,20 @@ async function postig(){//Delthis
     })
 
 }
+
+function throwError(message, colour="#ff0000"){
+    const errorBox = document.createElement("div")
+    errorBox.className = "errorBox"
+    errorBox.innerHTML = `<h3 class="errorMsg">${message}</h3>`
+    document.body.appendChild(errorBox)
+    
+    setTimeout(() => {
+        // errorBox.remove();
+        errorBox.style.opacity = '0';
+    }, 1500);
+    errorBox.addEventListener('transitionend', () => errorBox.remove());
+}
+
 
 //Both host and others should see same url
 //So createroom returns room id and host does join room right after

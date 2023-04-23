@@ -27,6 +27,7 @@ app = Flask(__name__)
 
 ## Show player colour##
 ## Maybe even take player name when joining and show all player colours##
+#clear local json. switch to db"
 
 @app.route("/")
 def home():
@@ -43,14 +44,14 @@ def joinRoom(roomId):
     playerId = randrange(1, 10000)
     data = getData(roomId)
     if (data == -1):
-        return {"idk":"Room not found"}
+        return {"status":1, "message":"Room not found"}
     data["numPlayers"] = data["numPlayers"] + 1
     data["players"].append(playerId)
     if (data["numPlayers"] == 1):
         data["host"] = playerId
     putData(roomId, data)
 
-    return {"playerId":playerId}
+    return {"status":0, "playerId":playerId}
 
 @app.route("/game/<roomId>")#/game/121212?id=2110
 def gamePage(roomId):
