@@ -9,18 +9,18 @@ app = Flask(__name__)
 ## ADD GAME OVER##              DONE
 ##Better error messages##       DONE
 ##Front end for errors##        DONE
-##Test join after game start##
+##Test join after game start##  Done
 
 ##Dont give full data. Give only some data##
 ##Fix Moveenable##        DONE
 ## SHOW GAME ROOM##       Done
 ##DONT LET SOLO PLAY##    Done
-## FONT ##
+## FONT ##                DONE
 
 ## Change to iterative ##
 
 ## Start button shows on reload even after game started##       DONE
-## Host can restart and play again. Make backend check for started at the top of start function ##
+## Host can restart and play again. Make backend check for started at the top of start function ## Cancel
 
 ## Time limit for moving ##
 ## Lag issues##
@@ -28,6 +28,13 @@ app = Flask(__name__)
 ## Show player colour##
 ## Maybe even take player name when joining and show all player colours##
 #clear local json. switch to db"
+
+## Switch to iterative function
+## Reduce sleep time
+## Switch to redis
+## Write a function to delete old games from db
+## On start clear db
+## Make endpoint to clear db
 
 @app.route("/")
 def home():
@@ -45,6 +52,9 @@ def joinRoom(roomId):
     data = getData(roomId)
     if (data == -1):
         return {"status":1, "message":"Room not found"}
+    if (data["isStarted"]):
+        return {"status":1, "message":"Game already started"}
+    
     data["numPlayers"] = data["numPlayers"] + 1
     data["players"].append(playerId)
     if (data["numPlayers"] == 1):
@@ -129,8 +139,7 @@ def move(roomId):
     data["moveEnable"] = False
     grid[square]["colour"] = currentPlayerIndex
 
-    # grid[square]["value"] += 1
-    #push to stack 
+    ## THIS PART ##
     stack = []
     stack.append(square)
 
@@ -161,13 +170,10 @@ def move(roomId):
                 # grid[i-6]["value"]+=1
                 stack.append(i-6)
                 
-
-
             if(i%6!=0):
                 grid[i-1]["colour"] = grid[i]["colour"]
                 # grid[i-1]["value"]+=1
                 stack.append(i-1)
-                
 
             if(i%6!=5):
                 grid[i+1]["colour"] = grid[i]["colour"]
@@ -184,6 +190,7 @@ def move(roomId):
         else:
             pass
 
+    ## THIS PART ##
     #move done
     data["grid"] = grid
     data["currentPlayerIndex"] = (currentPlayerIndex+1)%numPlayers
