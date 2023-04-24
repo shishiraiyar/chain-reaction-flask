@@ -173,7 +173,7 @@ def move(roomId):
             data["isGameOver"] = True
             break
         
-        sleep(4)
+        sleep(0.5)
     ## THIS PART ##
     #move done
     data["grid"] = grid #can be removed
