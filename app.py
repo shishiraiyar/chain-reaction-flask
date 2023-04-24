@@ -140,59 +140,43 @@ def move(roomId):
     grid[square]["colour"] = currentPlayerIndex
 
     ## THIS PART ##
-    stack = []
-    stack.append(square)
+    putData(roomId, data) #FOR MOVEENABLE
+    grid[square]["value"] += 1
+    flag = 1
+    while(flag):
+        flag = 0
+        for i in range(36):
+            if (grid[i]["value"] >= grid[i]["maxValue"]):
+                flag = 1
+                grid[i]["value"] = grid[i]["value"] - grid[i]["maxValue"]
 
-    while(len(stack)>0): #while stack not empty
-        sleep(0.5)
-        #write to file here
+                if (i//6 !=0):
+                    grid[i-6]["colour"] = grid[i]["colour"]
+                    grid[i-6]["value"]+=1
+                    
+                if(i%6!=0):
+                    grid[i-1]["colour"] = grid[i]["colour"]
+                    grid[i-1]["value"]+=1
+
+                if(i%6!=5):
+                    grid[i+1]["colour"] = grid[i]["colour"]
+                    grid[i+1]["value"]+=1
+
+                if (i//6 != 5):
+                    grid[i+6]["colour"] = grid[i]["colour"]
+                    grid[i+6]["value"] += 1
+                    
         data["grid"] = grid
         putData(roomId, data)
-        
+
         if (isGameOver(grid)):
             data["isGameOver"] = True
             break
-
-        i = stack.pop()
-        #increase value here
-        grid[i]["value"]+=1
         
-
-        print("i:", i)             
-        if (grid[i]["value"] == grid[i]["maxValue"]):
-            #set its value to 0
-            grid[i]["value"] = 0
-
-            #set neighbours colours to this
-            #increase neighbours value
-            if (i//6 !=0):
-                grid[i-6]["colour"] = grid[i]["colour"]
-                # grid[i-6]["value"]+=1
-                stack.append(i-6)
-                
-            if(i%6!=0):
-                grid[i-1]["colour"] = grid[i]["colour"]
-                # grid[i-1]["value"]+=1
-                stack.append(i-1)
-
-            if(i%6!=5):
-                grid[i+1]["colour"] = grid[i]["colour"]
-                # grid[i+1]["value"]+=1
-                stack.append(i+1)
-                
-
-            if (i//6 != 5):
-                grid[i+6]["colour"] = grid[i]["colour"]
-                # grid[i+6]["value"] += 1
-                stack.append(i+6)
-                
-
-        else:
-            pass
-
+        sleep(4)
     ## THIS PART ##
     #move done
-    data["grid"] = grid
+    data["grid"] = grid #can be removed
     data["currentPlayerIndex"] = (currentPlayerIndex+1)%numPlayers
     data["moveEnable"] = True
     putData(roomId, data)
