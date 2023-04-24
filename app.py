@@ -180,8 +180,12 @@ def move(roomId):
         sleep(0.5)
     ## THIS PART ##
     #move done
-    data["grid"] = grid #can be removed
-    data["currentPlayerIndex"] = (currentPlayerIndex+1)%numPlayers
+    currentPlayerIndex = (currentPlayerIndex+1)%numPlayers
+    for i in range(numPlayers):
+        if (isPlayerout(grid, numPlayers, currentPlayerIndex) and not data["isGameOver"]):
+            currentPlayerIndex = (currentPlayerIndex+1)%numPlayers
+
+    data["currentPlayerIndex"] = currentPlayerIndex
     data["moveEnable"] = True
     putData(roomId, data)
     
@@ -263,6 +267,16 @@ def isGameOver(grid):
     else:
         return False
 
+def isPlayerout(grid, numPlayers, playerIndex):
+    totalVal = 0
+    for i in range(36):
+        totalVal += grid[i]["value"]
+        if ((grid[i]["colour"] == playerIndex) and grid[i]["value"]>0):
+            return False
+
+    if (totalVal <numPlayers):
+        return False
+    return True
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=5000)

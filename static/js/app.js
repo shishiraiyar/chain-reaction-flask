@@ -38,6 +38,7 @@ async function onClick(squareNumber){
         throwError(response["message"]);
 
     }
+    updateGrid()
 }
 
 window.onload = async (event) => {
@@ -48,7 +49,9 @@ window.onload = async (event) => {
 
 
 async function updateGrid(){
+    let t1 = new Date().valueOf()
     let data = await getData()
+    console.log(parseInt(new Date().valueOf()) - parseInt(t1))
     let grid = data["grid"]
 
     for (let i=0; i<grid.length; i++){
