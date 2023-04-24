@@ -17,7 +17,7 @@ app = Flask(__name__)
 ##DONT LET SOLO PLAY##    Done
 ## FONT ##                DONE
 
-## Change to iterative ##
+## Change to iterative ## DONE
 
 ## Start button shows on reload even after game started##       DONE
 ## Host can restart and play again. Make backend check for started at the top of start function ## Cancel
@@ -27,14 +27,18 @@ app = Flask(__name__)
 
 ## Show player colour##
 ## Maybe even take player name when joining and show all player colours##
-#clear local json. switch to db"
 
-## Switch to iterative function
-## Reduce sleep time
-## Switch to redis
-## Write a function to delete old games from db
-## On start clear db
-## Make endpoint to clear db
+#KEEP EVERYTHING IN RAM>>>>>WHY DO U NEED BACKUP DONE
+
+
+## Write a thread to delete old games from db
+
+
+##Dead players cant continue##
+## Name input. Choose colour
+## Store name in local storage
+
+activeGames = {}
 
 @app.route("/")
 def home():
@@ -185,31 +189,19 @@ def move(roomId):
     return {"status":0}
 
 
-                    
-### IT HAS TO BE RECURSIVE. OR it has to have stack. 
-### Or else you can have neighbouring fours
-            
-# Top left right down
-
-	
 
     
 
 def getData(roomId):
-    with open("board.json") as file:
-        fileData = load(file)
-    data = fileData.get(roomId, -1)
+    global activeGames
+    data = activeGames.get(int(roomId), -1)
     return data
 
 def putData(roomId, data):
-    with open("board.json", "r") as file:
-        fileData = load(file)
+    global activeGames
+    activeGames[int(roomId)] = data
 
-    fileData[roomId] = data
 
-    with open("board.json", "w") as file:
-        dump(fileData, file, indent=4)
-    
 
         
 
@@ -232,7 +224,7 @@ Flask is multithreaded so peace. Clients keep requesting for the board(maybe at 
 
 def emptyData():
     temp = {}
-    temp["isStarted"] = False #same as join enable #CHANGE LATER
+    temp["isStarted"] = False 
     temp["isGameOver"] = False
     temp["moveEnable"] = True
     temp["numPlayers"]=0
