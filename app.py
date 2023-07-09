@@ -38,6 +38,9 @@ app = Flask(__name__)
 ## Name input. Choose colour
 ## Store name in local storage
 
+## Socket
+## Store game and name in session. 
+
 activeGames = {}
 
 @app.route("/")
