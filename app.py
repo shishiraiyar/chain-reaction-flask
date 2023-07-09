@@ -1,10 +1,10 @@
 from flask import Flask, render_template, request
-from json import load, dump
 from time import sleep
 from random import randrange
+from flask_socketio import SocketIO, emit, join_room, leave_room
 
 app = Flask(__name__)
-
+socketio = SocketIO(app)
 
 ## ADD GAME OVER##              DONE
 ##Better error messages##       DONE
@@ -41,7 +41,17 @@ app = Flask(__name__)
 ## Socket
 ## Store game and name in session. 
 
+## Soo list of players in data keeps track of all the players. socketio room keeps 
+# track of all the clients which is independent of the players. one player can be multiple clients.
 activeGames = {}
+
+@socketio.on('connect')
+def handleConnect():
+    print("CONNECTED")
+
+@socketio.on('disconnect')
+def handleDisconnect():
+    print('DISCONNECTED')
 
 @app.route("/")
 def home():
@@ -67,6 +77,7 @@ def joinRoom(roomId):
     if (data["numPlayers"] == 1):
         data["host"] = playerId
     putData(roomId, data)
+    # join_room(roomId)
 
     return {"status":0, "playerId":playerId}
 
@@ -77,15 +88,7 @@ def gamePage(roomId):
     isHost = (playerId == data["host"])
     return render_template("game.html", roomId=roomId, playerId=playerId, displayStartButton=(isHost and not data["isStarted"]))
 
-@app.route("/getData/<roomId>")
-def returnData(roomId):
-    
-    data = getData(roomId)
-    if(data == -1):
-        return {"idk": "Room not found"}    #HANDLE ERRORS IN FRONT MAYBE
-    return data 
-#DONT GIVE FULL DATA. Make a new json with grid and other necessary params only
-    
+
 @app.route("/start/<roomId>", methods=["POST"])
 def start(roomId):
     data = getData(roomId)
@@ -102,46 +105,40 @@ def start(roomId):
     putData(roomId, data)
     return {"ok":0}
 
-
 #CHANGE CURRENTPLAYER TO CURRENTPLAYERINDEX VERY IMP
 
 
-@app.route("/move/<roomId>", methods=["POST"])
-def move(roomId):
-
+@socketio.on("move")
+def move(roomId, playerId, square):
     data = getData(roomId)
     if(data == -1):
-        return {"status": 1, "message": "Room not found"}
+        emit("error", "Room not found")
+        return 
     
     if (not data["isStarted"]):
-        print("NOT START")
-        return {"status": 1, "message": "Game not started"}
+        emit("error", "Game not started")
+        return 
 
     currentPlayerIndex = data["currentPlayerIndex"]
     currentPlayerId = data["players"][currentPlayerIndex]
     numPlayers = data["numPlayers"]
     moveEnable = data["moveEnable"]
 
-    playerId = int(request.json["playerId"])
-    square = int(request.json["square"])
-
     if (data["isGameOver"]):
-        print("GAMOVAAAAAAAAAAAAAAAA")
-        return {"status": 1, "message": "GAME OVER"}
-    
-
+        emit("error", "Game over")
+        return 
 
     if (not moveEnable):
-        print("Moveenable")
-        return {"status": 1, "message": "Wait for your turn"}                  #maybe custom errors
+        emit("error", "Wait for your turn")
+        return
     if (playerId != currentPlayerId):
-        print("wrong player")
-        return {"status": 1, "message": "Not your turn"}
+        emit("error", "Not your turn")
+        return 
     
     grid = data["grid"]
     if (grid[square]["value"]!= 0  and grid[square]["colour"] != currentPlayerIndex):
-        print("Wrong move")
-        return {"status": 1, "message": "Invalid Move"}
+        emit("error", "Invalid Move")
+        return 
     
     data["moveEnable"] = False
     grid[square]["colour"] = currentPlayerIndex
@@ -175,6 +172,7 @@ def move(roomId):
                     
         data["grid"] = grid
         putData(roomId, data)
+        emit("gridUpdate", grid, broadcast=True) ########REMOVE NAMESPACE after changing move to a socketio thing
 
         if (isGameOver(grid)):
             data["isGameOver"] = True
@@ -194,6 +192,17 @@ def move(roomId):
     
 
     return {"status":0}
+
+
+@socketio.on("loadedGamePage")
+def clientConnectSocket(roomId, playerId):
+    
+    data = getData(roomId)
+    if ((data == -1) or (playerId not in data["players"])):
+        return {"Error":"Bro whatchu tryna do?"}
+    
+    join_room(roomId)
+    emit("gridUpdate", data["grid"])
 
 
 
@@ -282,6 +291,6 @@ def isPlayerout(grid, numPlayers, playerIndex):
     return True
 
 if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0", port=5000)
+    socketio.run(app=app, debug=True, host="0.0.0.0", port=5000)
 
 

@@ -1,20 +1,18 @@
 roomId = roomId;
 playerId = playerId;
 //get room id and player id from server when getting redirected
+const socket = io()  // put this in page load
 
-async function displayGrid(){
-    let data = await getData()
-    let grid = data["grid"]
+function drawEmptyGrid(){
     let htmlString = ""
-    for (let i=0; i<grid.length; i++){
-        let svgImg = getSvgImg(grid[i]["value"], grid[i]["colour"])  // <svg> </svg>
+    for (let i=0; i<36; i++){
+        let svgImg = getSvgImg(0, 0)  // <svg> </svg>
         htmlString +=  svgImg 
         if (i%6 == 5) htmlString+="<br>"
-
     }
     document.getElementsByClassName("grid")[0].innerHTML = htmlString;
 
-    for (let i=0; i<grid.length; i++){
+    for (let i=0; i<36; i++){
         let squareElement = document.getElementsByClassName("svgImg")[i]
         squareElement.addEventListener("click", function(){
             onClick(i)
@@ -23,50 +21,22 @@ async function displayGrid(){
 }
 
 async function onClick(squareNumber){
-
-    let data = {"playerId": playerId, "square": squareNumber}
-    let response = await fetch("/move/" + roomId, {
-        method:"POST",
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-    }).then((response)=>response.json())
-    console.log(response)
-    if (response["status"]){
-        throwError(response["message"]);
-
-    }
-    updateGrid()
+    socket.emit("move", roomId, playerId, squareNumber)
 }
 
 window.onload = async (event) => {
-    await displayGrid()
+    drawEmptyGrid()
     enableStartButton()
-    setInterval(updateGrid, 500)
+    socket.emit("loadedGamePage", roomId, playerId)//must do after drawing empty grid
   };
 
 
-async function updateGrid(){
-    let t1 = new Date().valueOf()
-    let data = await getData()
-    console.log(parseInt(new Date().valueOf()) - parseInt(t1))
-    let grid = data["grid"]
-
+async function updateGrid(grid){
     for (let i=0; i<grid.length; i++){
         let svg = document.getElementsByClassName("svgImg")[i]
         svg.childNodes[0].setAttribute("d", getSvgPath(grid[i]["value"]))
         svg.childNodes[0].setAttribute("fill", getColourHex(grid[i]["colour"]))
-
     }
-}
-
-
-
-async function getData(){
-    let response = await fetch("/getData/" + roomId).then(response => response.json())
-    return response
 }
 
 
@@ -140,26 +110,12 @@ function throwError(message, colour="#ff0000"){
     errorBox.addEventListener('transitionend', () => errorBox.remove());
 }
 
+socket.on("error", (error)=>{
+    throwError(error)
+})
 
-        // if (grid[i]["value"] == 0)
-        //     htmlString += '<div name="square" class="square fullImg" id="'+ i +'"><img /></div>'
-        // else{
-        //     let imgFile = getImageFile(grid[i]["value"], grid[i]["colour"]) 
-        //     htmlString += '<div name="square" class="square fullImg" id="' + i + '"><img src="' + imgFile + '"/></div>'
-        // }
 
-// function getImageFile(value, colour){
-//     let imgFile = "../static/images/"
-//     switch(value){
-//         case 1:imgFile += "single"; break;
-//         case 2:imgFile += "double"; break;
-//         case 3:imgFile += "triple"; break;
-//         case 4:imgFile += "quadraple"; break;
-//     }
-//     switch(colour){
-//         case 0:imgFile += "Red.png"; break;
-//         case 1:imgFile += "Green.png"; break;
-//         case 2:imgFile += "Blue.png"; break;
-//     }
-//     return imgFile
-// }
+socket.on("gridUpdate", (grid)=>{
+    updateGrid(grid)
+  })
+
