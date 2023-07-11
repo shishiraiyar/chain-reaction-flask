@@ -149,27 +149,32 @@ def move(roomId, playerId, square):
     flag = 1
     while(flag):
         flag = 0
+        indicesToExplode = []
         for i in range(36):
             if (grid[i]["value"] >= grid[i]["maxValue"]):
                 flag = 1
-                grid[i]["value"] = grid[i]["value"] - grid[i]["maxValue"]
+                indicesToExplode.append(i)
 
-                if (i//6 !=0):
-                    grid[i-6]["colour"] = grid[i]["colour"]
-                    grid[i-6]["value"]+=1
-                    
-                if(i%6!=0):
-                    grid[i-1]["colour"] = grid[i]["colour"]
-                    grid[i-1]["value"]+=1
 
-                if(i%6!=5):
-                    grid[i+1]["colour"] = grid[i]["colour"]
-                    grid[i+1]["value"]+=1
+        for i in indicesToExplode:
+            grid[i]["value"] = grid[i]["value"] - grid[i]["maxValue"]
 
-                if (i//6 != 5):
-                    grid[i+6]["colour"] = grid[i]["colour"]
-                    grid[i+6]["value"] += 1
-                    
+            if (i//6 !=0):
+                grid[i-6]["colour"] = grid[i]["colour"]
+                grid[i-6]["value"]+=1
+                
+            if(i%6!=0):
+                grid[i-1]["colour"] = grid[i]["colour"]
+                grid[i-1]["value"]+=1
+
+            if(i%6!=5):
+                grid[i+1]["colour"] = grid[i]["colour"]
+                grid[i+1]["value"]+=1
+
+            if (i//6 != 5):
+                grid[i+6]["colour"] = grid[i]["colour"]
+                grid[i+6]["value"] += 1
+                
         data["grid"] = grid
         putData(roomId, data)
         emit("gridUpdate", grid, broadcast=True) ########REMOVE NAMESPACE after changing move to a socketio thing
