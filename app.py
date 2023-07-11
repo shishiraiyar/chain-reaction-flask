@@ -2,6 +2,10 @@ from flask import Flask, render_template, request
 from time import sleep
 from random import randrange
 from flask_socketio import SocketIO, emit, join_room, leave_room
+DEV = False
+
+if not DEV:
+    import eventlet
 
 app = Flask(__name__)
 socketio = SocketIO(app)
@@ -110,6 +114,7 @@ def start(roomId):
 
 @socketio.on("move")
 def move(roomId, playerId, square):
+    global DEV
     data = getData(roomId)
     if(data == -1):
         emit("error", "Room not found")
@@ -178,7 +183,8 @@ def move(roomId, playerId, square):
         data["grid"] = grid
         putData(roomId, data)
         emit("gridUpdate", grid, broadcast=True) ########REMOVE NAMESPACE after changing move to a socketio thing
-
+        if not DEV:
+            eventlet.sleep(0.01)
         if (isGameOver(grid)):
             data["isGameOver"] = True
             break
